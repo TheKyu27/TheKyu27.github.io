@@ -1,0 +1,571 @@
+/* ---------------------------------------------------------------
+   디자인 토큰 — 색/간격을 바꾸고 싶으면 여기만 수정하세요.
+
+   타입 시스템은 두 겹입니다:
+     · 내용 레이어 (--font-sans)  — 논문 제목, 저자, 본문
+     · 라벨 레이어 (--font-mono)  — 섹션 제목, 학회명, 날짜, 특허번호
+   데이터시트의 조판 논리를 빌린 것으로, 라벨이 부품 번호처럼 읽히면서
+   내용과 분리됩니다.
+   --------------------------------------------------------------- */
+:root {
+  color-scheme: light;   /* 스크롤바 등 브라우저 기본 UI도 따라오도록 */
+
+  --bg:        #ffffff;
+  --fg:        #16161a;   /* 본문 */
+  --fg-mid:    #43434d;   /* 학회명, 소제목 — 본문보다 한 단계 낮게 */
+  --fg-muted:  #6a6a75;   /* 날짜, 저자, 부가 정보 */
+  --fg-faint:  #93939e;   /* 불릿 마커 전용 — 본문 대비 기준(4.5:1) 미달이라 글자에 쓰지 말 것 */
+  --accent:    #2b4ecc;   /* 링크 */
+  --rule:      #e7e7ec;   /* 구분선 */
+  --chip-bg:   #f3f3f6;   /* 상태 칩 배경 */
+
+  /* 학회 성격 분류 + 강조 논문. 정보를 인코딩하는 색이므로 세 개로 제한합니다. */
+  --cat-circuit: #0f6d6a;
+  --cat-arch:    #6132c4;
+  --highlight:   #8a5a00;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo",
+               "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, "Roboto Mono",
+               "Courier New", monospace;
+
+  --measure:   48rem;     /* 본문 최대 너비 */
+  --gutter:    8.5rem;    /* 좌측 라벨 칼럼 — 학회명·날짜·분류가 모두 여기 정렬 */
+  --gap:       3rem;      /* 섹션 사이 간격 */
+}
+
+/* 다크 팔레트. <head>의 인라인 스크립트가 항상 data-theme을 채우므로
+   (저장된 선택값 → 없으면 OS 설정) 미디어쿼리 없이 이 한 블록이면 됩니다.
+   색을 바꿀 곳도 여기 한 군데입니다. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg:       #0f0f12;
+  --fg:       #eaeaef;
+  --fg-mid:   #b6b6c2;
+  --fg-muted: #94949f;
+  --fg-faint: #6e6e79;
+  --accent:   #93b0f7;
+  --rule:     #26262c;
+  --chip-bg:  #1b1b21;
+
+  --cat-circuit: #4ecdc4;
+  --cat-arch:    #b799f5;
+  --highlight:   #e0b341;
+}
+
+/* ---------------------------------------------------------------
+   기본
+   --------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  padding: 4.5rem 1.5rem 6rem;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+main { max-width: var(--measure); margin-inline: auto; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+/* 키보드 사용자만 포커스 링을 보도록 */
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* 스크린리더/키보드 전용 본문 바로가기 */
+.skip { position: absolute; left: -9999px; }
+.skip:focus {
+  left: 1rem; top: 1rem;
+  padding: .5rem .75rem;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  z-index: 10;
+}
+
+/* ---------------------------------------------------------------
+   라이트/다크 전환 버튼
+   --------------------------------------------------------------- */
+.theme-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--fg-muted);
+  cursor: pointer;
+  transition: color .15s ease, border-color .15s ease;
+}
+
+.theme-toggle:hover {
+  color: var(--fg);
+  border-color: var(--fg-muted);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.theme-toggle svg {
+  width: 1.0625rem;
+  height: 1.0625rem;
+}
+
+/* 누르면 갈 상태를 아이콘으로 보여줍니다 — 라이트일 땐 달, 다크일 땐 해 */
+.theme-toggle .sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .sun  { display: block; }
+:root[data-theme="dark"] .theme-toggle .moon { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle { transition: none; }
+}
+
+/* ---------------------------------------------------------------
+   섹션 이동 링크 — 본문 왼쪽 여백이 충분한 넓은 화면에서만 나타납니다.
+   좁은 화면에서는 본문을 밀어내므로 숨깁니다.
+   --------------------------------------------------------------- */
+.toc { display: none; }
+
+@media (min-width: 1200px) {
+  .toc {
+    display: block;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    /* 본문 왼쪽 가장자리에서 다시 왼쪽으로 — 화면이 좁아지면 1.5rem에서 멈춤 */
+    left: max(1.5rem, calc(50% - var(--measure) / 2 - 10.5rem));
+    width: 9rem;
+  }
+
+  .toc ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-left: 1px solid var(--rule);
+  }
+
+  .toc a {
+    display: block;
+    padding: .4rem 0 .4rem .9rem;
+    margin-left: -1px;
+    border-left: 1px solid transparent;
+    font-family: var(--font-mono);
+    font-size: .75rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    transition: color .15s ease, border-color .15s ease;
+  }
+
+  .toc a:hover {
+    color: var(--fg);
+    text-decoration: none;
+  }
+
+  .toc a[aria-current] {
+    color: var(--fg);
+    border-left-color: var(--fg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toc a { transition: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* ---------------------------------------------------------------
+   헤더
+   --------------------------------------------------------------- */
+/* 아래 구분선은 각 섹션 제목의 border-top이 담당하므로 여기엔 두지 않습니다 */
+.masthead {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.25rem;
+}
+
+.masthead-text { flex: 1; min-width: 0; }
+
+h1 {
+  margin: 0;
+  font-size: 2.375rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.role {
+  margin: .4rem 0 0;
+  font-size: 1.0625rem;
+  color: var(--fg-mid);
+}
+
+.summary {
+  margin: 1.25rem 0 0;
+  max-width: 36rem;   /* 요약문은 본문보다 좁게 — 읽기 리듬 */
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1.5rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1rem;
+  color: var(--fg-muted);
+}
+
+.contact li {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  opacity: .55;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--chip-bg);
+  /* 사진이 밝을 때도 원의 경계가 보이도록 */
+  box-shadow: 0 0 0 1px var(--rule);
+}
+
+/* ---------------------------------------------------------------
+   섹션
+   --------------------------------------------------------------- */
+section {
+  margin-top: var(--gap);
+  scroll-margin-top: 2rem;   /* 앵커로 점프했을 때 제목이 뷰포트 상단에 붙지 않도록 */
+}
+
+/* 섹션 제목 — 라벨 레이어. 구분선이 섹션의 시작을 표시합니다. */
+h2 {
+  margin: 0 0 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: .9375rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+/* 학력·활동 항목. 논문 목록과 같은 그리드를 쓰므로 페이지 전체가
+   하나의 정렬 축을 공유합니다 — 왼쪽은 라벨, 오른쪽은 내용. */
+.entry {
+  display: grid;
+  grid-template-columns: var(--gutter) 1fr;
+  gap: 0 1.5rem;
+  margin-bottom: 2.25rem;
+}
+.entry:last-child { margin-bottom: 0; }
+
+/* 한두 줄짜리 항목 */
+.entry.compact { margin-bottom: 1.25rem; }
+
+h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -0.012em;
+}
+
+.org { font-weight: 500; color: var(--fg-mid); }
+
+.entry ul {
+  margin: .75rem 0 0;
+  padding-left: 1.15rem;
+}
+.entry li { margin-bottom: .4rem; }
+.entry li::marker { color: var(--fg-faint); }
+
+.entry p { margin: .75rem 0 0; }
+
+/* 게터의 날짜는 위 규칙에서 제외 — 제목 첫 줄과 나란히 서야 함 */
+.entry > .venue { margin-top: 0; }
+
+/* 제목 바로 밑에 붙는 부가 설명 (연구실, 지도교수, 부전공 등) */
+.entry .sub {
+  margin-top: .25rem;
+  font-size: 1rem;
+  color: var(--fg-muted);
+}
+
+.stack {
+  font-size: .9375rem;
+  color: var(--fg-muted);
+}
+
+code {
+  padding: .1em .35em;
+  border-radius: 3px;
+  background: var(--chip-bg);
+  font-family: var(--font-mono);
+  font-size: .875em;
+}
+
+/* ---------------------------------------------------------------
+   논문 · 특허 — 좌측 게터에 학회명, 우측에 제목/저자
+   --------------------------------------------------------------- */
+/* 섹션 제목보다 한 단계 아래. 대문자 모노(섹션)와 문장형 산세리프(소제목)로
+   서체 자체가 다르므로 크기 차이가 작아도 위계가 흔들리지 않습니다. */
+.subhead {
+  margin: 0 0 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg-mid);
+  letter-spacing: -0.008em;
+}
+
+/* 두 번째 이후 소제목 앞에 숨 쉴 공간 */
+.pubs + .subhead { margin-top: 2.5rem; }
+
+.pubs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pubs li {
+  display: grid;
+  grid-template-columns: var(--gutter) 1fr;
+  gap: 0 1.5rem;
+  margin-bottom: 1.75rem;
+}
+.pubs li:last-child { margin-bottom: 0; }
+
+/* 학회명·날짜 — 라벨 레이어. 부품 번호처럼 읽히도록 모노스페이스 */
+.venue {
+  margin: 0;
+  padding-top: .22rem;   /* 제목 첫 줄과 시각적 베이스라인 맞춤 */
+  font-family: var(--font-mono);
+  font-size: .875rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--fg-mid);
+}
+
+.pub-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -0.012em;
+}
+
+.authors {
+  margin: .4rem 0 0;
+  font-size: .9375rem;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+
+/* 저자 목록에서 본인 이름 강조 — 학술 CV의 표준 관행 */
+.me {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+/* 학회 성격 분류 — 학회명 바로 아래 */
+.cat {
+  display: block;
+  margin-top: .3rem;
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.cat.circuit { color: var(--cat-circuit); }
+.cat.arch    { color: var(--cat-arch); }
+
+/* 특허번호 등 식별자 — 라벨 레이어 */
+.ident {
+  margin: .4rem 0 0;
+  font-family: var(--font-mono);
+  font-size: .8125rem;
+  color: var(--fg-muted);
+}
+
+/* Highlight Paper, Under Review 같은 상태 표시 */
+.tag {
+  display: inline-block;
+  margin-left: .45rem;
+  padding: .15em .5em;
+  border-radius: 3px;
+  background: var(--chip-bg);
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  vertical-align: .12em;
+  white-space: nowrap;
+}
+
+/* 수상·초청 등 강조가 필요한 논문 */
+.tag.highlight {
+  background: transparent;
+  color: var(--highlight);
+  font-weight: 600;
+  /* border 대신 inset shadow — 칩 크기가 바뀌지 않아 줄 간격이 흔들리지 않음 */
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+
+/* ---------------------------------------------------------------
+   연구 분야 — 라벨/내용 2열 정의 목록
+   --------------------------------------------------------------- */
+.skills {
+  display: grid;
+  grid-template-columns: var(--gutter) 1fr;
+  gap: .75rem 1.5rem;
+  margin: 0;
+}
+
+/* 라벨 레이어 — 논문 게터와 같은 칼럼 폭, 같은 서체 */
+.skills dt {
+  font-family: var(--font-mono);
+  font-size: .875rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--fg-mid);
+}
+
+.skills dd { margin: 0; }
+
+/* ---------------------------------------------------------------
+   푸터
+   --------------------------------------------------------------- */
+footer {
+  margin-top: var(--gap);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+  font-size: .9375rem;
+  color: var(--fg-muted);
+}
+
+footer p { margin: 0 0 .35rem; }
+
+kbd {
+  padding: .1em .4em;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: .85em;
+}
+
+/* ---------------------------------------------------------------
+   모바일
+   --------------------------------------------------------------- */
+@media (max-width: 620px) {
+  body { padding-top: 2.5rem; }
+
+  .masthead {
+    flex-direction: column-reverse;   /* 사진이 이름 위로 */
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  h1 { font-size: 1.875rem; }
+  .summary, .role { font-size: 1rem; }
+
+  .avatar { width: 88px; height: 88px; }
+
+  /* 라벨을 내용 위로 */
+  .pubs li, .entry, .skills {
+    grid-template-columns: 1fr;
+    gap: .3rem;
+  }
+  .skills dd { margin-bottom: .9rem; }
+
+  .pub-title, h3 { font-size: 1.0625rem; }
+}
+
+/* ---------------------------------------------------------------
+   인쇄 / PDF 저장 — Cmd+P 로 그대로 CV PDF가 되도록
+   --------------------------------------------------------------- */
+@media print {
+  /* [data-theme]까지 함께 선택해야 다크 모드로 보던 중 인쇄해도 흰 종이가 됩니다.
+     :root 만 쓰면 :root[data-theme="dark"] 에 우선순위가 밀립니다. */
+  :root,
+  :root[data-theme] {
+    color-scheme: light;
+    --bg: #fff; --fg: #000; --fg-mid: #333; --fg-muted: #444;
+    --fg-faint: #666; --accent: #000; --rule: #ccc; --chip-bg: #f2f2f2;
+    --cat-circuit: #333; --cat-arch: #333; --highlight: #333;
+    --gap: 1.75rem;
+  }
+
+  @page { margin: 14mm; }
+
+  body {
+    padding: 0;
+    font-size: 10.5pt;
+    line-height: 1.5;
+  }
+
+  main { max-width: none; }
+
+  /* 링크 주소를 본문 옆에 펼쳐서 종이에서도 따라갈 수 있게 */
+  .contact a::after,
+  .pub-title a::after {
+    content: " (" attr(href) ")";
+    font-size: .85em;
+    color: var(--fg-muted);
+    word-break: break-all;
+  }
+  .contact a[href^="mailto:"]::after { content: none; }
+
+  /* 항목이 페이지 경계에서 잘리지 않도록 */
+  .entry, .pubs li { break-inside: avoid; }
+  h2, .subhead { break-after: avoid; }
+
+  .toc, .theme-toggle { display: none; }
+
+  /* 논문이 많아 종이에서는 간격을 좁힘 */
+  h2 { margin-bottom: 1rem; padding-top: 1rem; }
+  .pubs li { margin-bottom: 1rem; }
+  .pubs + .subhead { margin-top: 1.35rem; }
+  .entry.compact { margin-bottom: .8rem; }
+
+  .tag { border: 1px solid var(--rule); }
+  .icon { opacity: 1; }
+  .avatar { width: 88px; height: 88px; box-shadow: none; }
+  .print-hint { display: none; }
+}

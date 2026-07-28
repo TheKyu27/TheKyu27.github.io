@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teokkyu Suh — Ph.D. Student, KAIST</title>
+<meta name="description" content="Ph.D. student at KAIST CastLab working on AI accelerators, NPUs, and domain-specific architectures, currently focused on LLM inference systems.">
+
+<!-- Link preview when shared (og:image should be 1200x630) -->
+<meta property="og:title" content="Teokkyu Suh — Ph.D. Student, KAIST">
+<meta property="og:description" content="Ph.D. student at KAIST CastLab working on AI accelerators, NPUs, and domain-specific architectures, currently focused on LLM inference systems.">
+<meta property="og:type" content="profile">
+<meta property="og:url" content="https://thekyu27.github.io">
+
+<link rel="stylesheet" href="style.css">
+
+<script>
+// 첫 페인트 전에 테마를 확정해 흰 화면이 번쩍이는 걸 막습니다.
+// 저장된 선택이 있으면 그것을, 없으면 OS 설정을 따릅니다.
+(function () {
+  var saved = null;
+  try { saved = localStorage.getItem('theme'); } catch (e) {}
+  document.documentElement.dataset.theme =
+    saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+})();
+</script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<button class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+  <svg class="moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M13.5 9.6A5.8 5.8 0 0 1 6.4 2.5a5.8 5.8 0 1 0 7.1 7.1Z"/>
+  </svg>
+  <svg class="sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+    <circle cx="8" cy="8" r="3.1"/>
+    <path d="M8 .9v1.7M8 13.4v1.7M15.1 8h-1.7M2.6 8H.9M13.02 13.02l-1.2-1.2M4.18 4.18l-1.2-1.2M2.98 13.02l1.2-1.2M11.82 4.18l1.2-1.2"/>
+  </svg>
+</button>
+
+<!-- 넓은 화면에서만 보이는 섹션 이동 링크. 통째로 지워도 나머지는 그대로 동작합니다. -->
+<nav class="toc" aria-label="Sections">
+  <ul>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#patents">Patents</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#service">Service</a></li>
+  </ul>
+</nav>
+
+<main id="main">
+
+  <header class="masthead">
+    <div class="masthead-text">
+      <h1>Teokkyu Suh</h1>
+      <p class="role">Ph.D. Student · CastLab · KAIST</p>
+      <p class="summary">
+        I work on AI accelerators, NPUs, and domain-specific architectures. During my M.S. I
+        deliberately worked across domains — DNA sequencing, 3D rendering, processing-in-memory,
+        and computer vision. My Ph.D. focuses on LLM inference systems.
+      </p>
+      <ul class="contact">
+        <li>
+          <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="1.75" y="3.25" width="12.5" height="9.5" rx="1.75"/>
+            <path d="M2.6 4.9 8 8.8l5.4-3.9"/>
+          </svg>
+          <a href="mailto:ejrrb102@kaist.ac.kr">ejrrb102@kaist.ac.kr</a>
+        </li>
+        <li>
+          <svg class="icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M14.82 0H1.18C.53 0 0 .52 0 1.16v13.68C0 15.48.53 16 1.18 16h13.64c.65 0 1.18-.52 1.18-1.16V1.16C16 .52 15.47 0 14.82 0ZM4.74 13.63H2.37V6h2.37v7.63ZM3.56 4.96a1.38 1.38 0 1 1 0-2.75 1.38 1.38 0 0 1 0 2.75Zm10.07 8.67h-2.37V9.9c0-.89-.02-2.03-1.24-2.03-1.24 0-1.43.97-1.43 1.97v3.79H6.22V6H8.5v1.04h.03c.32-.6 1.09-1.24 2.25-1.24 2.4 0 2.85 1.58 2.85 3.64v4.19Z"/>
+          </svg>
+          <a href="https://www.linkedin.com/in/teokkyu-suh-8aa9712b5/">LinkedIn</a>
+        </li>
+        <li>
+          <svg class="icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M8 1.1 0 5.3l8 4.2 8-4.2-8-4.2Z"/>
+            <path d="M3.2 7.62v3.08c0 1.6 2.15 2.7 4.8 2.7s4.8-1.1 4.8-2.7V7.62L8 10.2 3.2 7.62Z"/>
+          </svg>
+          <a href="https://scholar.google.com/citations?user=Xtczg88AAAAJ">Google Scholar</a>
+        </li>
+        <li>
+          <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M13 6.8c0 3.6-5 8.2-5 8.2s-5-4.6-5-8.2a5 5 0 0 1 10 0Z"/>
+            <circle cx="8" cy="6.7" r="1.9"/>
+          </svg>
+          Daejeon, South Korea
+        </li>
+      </ul>
+    </div>
+    <!-- 실제 사진으로 바꾸려면 assets/profile.png를 덮어쓰세요 (정사각형, 400×400 이상).
+         사진 없이 가려면 아래 <img> 한 줄만 지우면 레이아웃이 자동으로 맞춰집니다. -->
+    <img class="avatar" src="assets/profile.png" alt="Teokkyu Suh">
+  </header>
+
+  <section id="education">
+    <h2>Education</h2>
+
+    <article class="entry compact">
+      <p class="venue">2026.03–present</p>
+      <div>
+        <h3>Ph.D., Electrical Engineering · <span class="org">KAIST</span></h3>
+        <p class="sub">CastLab, advised by Prof. Joo-Young Kim</p>
+      </div>
+    </article>
+
+    <article class="entry compact">
+      <p class="venue">2024.03–2026.02</p>
+      <div>
+        <h3>M.S., Electrical Engineering · <span class="org">KAIST</span></h3>
+        <p class="sub">CastLab, advised by Prof. Joo-Young Kim</p>
+      </div>
+    </article>
+
+    <article class="entry compact">
+      <p class="venue">2019.03–2024.02</p>
+      <div>
+        <h3>B.S., Electrical Engineering · <span class="org">KAIST</span></h3>
+        <p class="sub">Double major in Bio and Brain Engineering</p>
+      </div>
+    </article>
+  </section>
+
+  <section id="publications">
+    <h2>Publications</h2>
+
+    <h3 class="subhead">International Conferences</h3>
+    <ol class="pubs">
+      <li>
+        <!-- .cat 은 학회 성격 분류. circuit / arch 중 선택 -->
+        <p class="venue">A-SSCC ’26<span class="cat circuit">Circuit</span></p>
+        <div>
+          <p class="pub-title">
+            GAREN: A 890.9 FPS, 412 iter/s 3D Gaussian Splatting Rendering and Modeling
+            Accelerator with Hybrid Sorting, Out-of-Range Filtering, and Gradient Skipping
+            <span class="tag highlight">Highlight Paper</span>
+          </p>
+          <p class="authors">
+            <span class="me">Teokkyu Suh</span>, Junsoo Lim, Jae-Young Kim, Minjun Park,
+            Hyunmin Choi, Jaeha Min, Sungwoong Yune, Joo-Young Kim
+          </p>
+        </div>
+      </li>
+
+      <li>
+        <p class="venue">VLSI ’26<span class="cat circuit">Circuit</span></p>
+        <div>
+          <p class="pub-title">
+            Specter: 376 fps 2.67 nJ/pixel 4DGS Processor for Spatiotemporal Reconstruction
+            with Contribution-Ordered Rendering and Deformation-aware Modeling
+          </p>
+          <p class="authors">
+            Jae-Young Kim, <span class="me">Teokkyu Suh</span>, Junsoo Lim, Minjun Park,
+            Hyunmin Choi, Jaeha Min, Donghyuk Kim, Joo-Young Kim
+          </p>
+        </div>
+      </li>
+
+      <li>
+        <p class="venue">ISCA ’24<span class="cat arch">Architecture</span></p>
+        <div>
+          <p class="pub-title">
+            BLESS: Bandwidth and Locality Enhanced SMEM Seeding Acceleration for DNA Sequencing
+          </p>
+          <p class="authors">
+            Seunghee Han, Seungjae Moon, <span class="me">Teokkyu Suh</span>, Jaehoon Heo,
+            Joo-Young Kim
+          </p>
+        </div>
+      </li>
+    </ol>
+
+    <h3 class="subhead">Journals &amp; Preprints</h3>
+    <ol class="pubs">
+      <li>
+        <p class="venue">TETC<span class="cat arch">Architecture</span></p>
+        <div>
+          <p class="pub-title">
+            EssenSplat: Eliminating Tile- and Pixel-Level Redundancy in Gaussian-based
+            Rendering Pipeline
+            <span class="tag">Under Review</span>
+          </p>
+          <p class="authors">
+            <span class="me">Teokkyu Suh</span>, Minjun Park, Jae-Young Kim, Sungwoong Yune,
+            Hangyeol Kim, Joo-Young Kim
+          </p>
+        </div>
+      </li>
+
+      <li>
+        <p class="venue">arXiv<span class="cat circuit">Circuit</span></p>
+        <div>
+          <p class="pub-title">
+            RED: Energy Optimization Framework for eDRAM-based PIM with Reconfigurable
+            Voltage Swing and Retention-aware Scheduling
+          </p>
+          <p class="authors">
+            Jae-Young Kim, Donghyuk Kim, Seungjae Yoo, Sungyeob Woo,
+            <span class="me">Teokkyu Suh</span>, Joo-Young Kim
+          </p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section id="patents">
+    <h2>Patents</h2>
+    <!-- 영문 제목은 한국어 출원 명칭을 옮긴 것입니다. 공식 영문 명칭이 따로 있다면 교체하세요. -->
+    <ol class="pubs">
+      <li>
+        <p class="venue">Filed 2025</p>
+        <div>
+          <p class="pub-title">
+            Volume Rendering Accelerator Based on Priority-Aware Hierarchical Skipping and
+            Pivot-Delta Rendering for Efficient 3D Gaussian Splatting
+          </p>
+          <p class="ident">KR 10-2025-0177964 · Application pending</p>
+        </div>
+      </li>
+
+      <li>
+        <p class="venue">Filed 2025</p>
+        <div>
+          <p class="pub-title">
+            Redundant Gaussian Pruning Architecture via Opacity-Aware Radius Adjustment and
+            Shape-Aware Hybrid Tile Allocation
+          </p>
+          <p class="ident">KR 10-2025-0177965 · Application pending</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section id="research">
+    <h2>Research Interests</h2>
+    <dl class="skills">
+      <dt>Architecture</dt>
+      <dd>AI accelerators, NPUs, domain-specific accelerators, processing-in-memory</dd>
+
+      <dt>Applications</dt>
+      <dd>LLM inference systems, neural rendering (3D/4D Gaussian Splatting), genome sequencing, computer vision</dd>
+
+      <!-- TODO: 아래 두 줄은 연구 분야로 추정해 채워둔 자리입니다. 실제 사용하는 툴/언어로 바꿔주세요. -->
+      <dt>Design</dt>
+      <dd>Verilog / SystemVerilog RTL, ASIC synthesis and P&amp;R, FPGA prototyping</dd>
+
+      <dt>Software</dt>
+      <dd>C/C++, Python, CUDA, PyTorch</dd>
+    </dl>
+  </section>
+
+  <section id="service">
+    <h2>Leadership &amp; Service</h2>
+
+    <article class="entry compact">
+      <p class="venue">2021.03–2022.02</p>
+      <div>
+        <h3>President, Student Council · <span class="org">Dept. of Bio and Brain Engineering, KAIST</span></h3>
+      </div>
+    </article>
+
+    <article class="entry compact">
+      <p class="venue">2020.03–2023.02</p>
+      <div>
+        <h3>Class Representative · <span class="org">Dept. of Bio and Brain Engineering, KAIST</span></h3>
+      </div>
+    </article>
+
+    <article class="entry compact">
+      <p class="venue">2019.03–2021.02</p>
+      <div>
+        <h3>Official Student Ambassador (KAINURI) · <span class="org">KAIST</span></h3>
+      </div>
+    </article>
+  </section>
+
+  <footer>
+    <p>Last updated July 2026 · <a href="https://github.com/TheKyu27/TheKyu27.github.io">Source</a></p>
+    <p class="print-hint">Press <kbd>Cmd</kbd>+<kbd>P</kbd> to save this page as a PDF CV.</p>
+  </footer>
+
+</main>
+
+<script>
+// 라이트/다크 전환. 버튼을 지우면 이 블록도 지우면 됩니다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.theme-toggle');
+  if (!btn) return;
+
+  function read() {
+    try { return localStorage.getItem('theme'); } catch (e) { return null; }
+  }
+
+  function render() {
+    var dark = root.dataset.theme === 'dark';
+    btn.setAttribute('aria-pressed', String(dark));
+    btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+
+  btn.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    render();
+  });
+
+  // 버튼을 한 번도 누른 적이 없으면 OS 설정 변화를 계속 따라갑니다.
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+    if (read()) return;
+    root.dataset.theme = e.matches ? 'dark' : 'light';
+    render();
+  });
+
+  render();
+})();
+</script>
+
+<script>
+// 좌측 이동 링크의 현재 섹션 표시. nav를 지우면 이 블록도 지우면 됩니다.
+(function () {
+  const links = new Map();
+  document.querySelectorAll('.toc a').forEach(a => {
+    const section = document.querySelector(a.getAttribute('href'));
+    if (section) links.set(section, a);
+  });
+  if (!links.size) return;
+
+  const sections = [...links.keys()];
+  let queued = false;
+
+  function sync() {
+    queued = false;
+    // 뷰포트 상단 기준선을 지난 마지막 섹션이 현재 위치
+    let current = sections[0];
+    for (const s of sections) {
+      if (s.getBoundingClientRect().top <= 140) current = s;
+    }
+    links.forEach((a, s) => {
+      if (s === current) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
+  }
+
+  addEventListener('scroll', () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(sync);
+  }, { passive: true });
+
+  sync();
+})();
+</script>
+
+</body>
+</html>
