@@ -397,6 +397,12 @@ code {
   color: var(--fg-muted);
 }
 
+/* 공동 1저자(*) 각주 — 저자 목록 아래 한 줄 */
+.equal {
+  display: block;
+  font-size: .8125rem;
+}
+
 /* 저자 목록에서 본인 이름 강조 — 학술 CV의 표준 관행 */
 .me {
   font-weight: 600;
