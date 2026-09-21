@@ -534,8 +534,15 @@ kbd {
     color-scheme: light;
     --bg: #fff; --fg: #000; --fg-mid: #333; --fg-muted: #444;
     --fg-faint: #666; --accent: #000; --rule: #ccc; --chip-bg: #f2f2f2;
-    --cat-circuit: #333; --cat-arch: #333; --highlight: #333;
+    /* 분류·Highlight 색은 PDF에서도 유지 (라이트 모드 값) */
+    --cat-circuit: #0f6d6a; --cat-arch: #6132c4; --highlight: #8a5a00;
     --gap: 1.75rem;
+  }
+
+  /* 브라우저는 기본적으로 배경색을 인쇄하지 않음 → 칩 배경까지 그대로 출력 */
+  html {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   @page { margin: 14mm; }
